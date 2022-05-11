@@ -51,7 +51,7 @@ struct ecuPar {
 
 struct ecuPar ecuPar = {
     __DATE__ " " __TIME__, // EPK
-    2000, // Default cycle time in us
+    1000, // Default cycle time in us
     3.0, // period
     0.0, // offset
     0, // phase
@@ -131,7 +131,7 @@ void ecuInit() {
     channel1 = channel2 = channel3 = 0;
 
     // Create an XCP event for the cyclic task
-    gXcpEvent_EcuCyclic = XcpCreateEvent("ecuTask", 2*CLOCK_TICKS_PER_MS, 0, 0, 0);
+    gXcpEvent_EcuCyclic = XcpCreateEvent("ecuTask", CLOCK_TICKS_PER_MS, 0, 0, 0);
 }
 
 
@@ -157,13 +157,13 @@ void ecuCyclic( void )
     channel1 = ecuCalPage->offset + ecuCalPage->ampl * sin(x);
     channel2 = ecuCalPage->offset + ecuCalPage->ampl * sin(x + M_PI * 1 / 3);
     channel3 = ecuCalPage->offset + ecuCalPage->ampl * sin(x + M_PI * 2 / 3);
-    ecuTime += 0.002;
+    ecuTime += 0.001;
 
     XcpEvent(gXcpEvent_EcuCyclic); // Trigger XCP measurement data aquisition event 
 }
 
 
-// ECU cyclic (2ms default) demo task
+// ECU cyclic (1ms default) demo task
 #ifdef _WIN
 DWORD WINAPI ecuTask(LPVOID p)
 #else
