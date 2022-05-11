@@ -30,14 +30,6 @@ double ecuTime = 0;
 double channel1 = 0;
 double channel2 = 0;
 double channel3 = 0;
-uint8_t byteArray1[1024];
-uint32_t longArray1[1024];
-uint8_t  byteCounter = 0;
-uint16_t wordCounter = 0;
-uint32_t dwordCounter = 0;
-int8_t  sbyteCounter = 0;
-int16_t swordCounter = 0;
-int32_t sdwordCounter = 0;
 
 
 /**************************************************************************/
@@ -137,14 +129,6 @@ void ecuInit() {
 
     // Initialize measurement variables
     channel1 = channel2 = channel3 = 0;
-    byteCounter = 0;
-    wordCounter = 0;
-    dwordCounter = 0;
-    sbyteCounter = 0;
-    swordCounter = 0;
-    sdwordCounter = 0;
-    for (int i = 0; i < 1024; i++) byteArray1[i] = (unsigned char)i;
-    for (unsigned int i = 0; i < 1024; i++) longArray1[i] = i;
 
     // Create an XCP event for the cyclic task
     gXcpEvent_EcuCyclic = XcpCreateEvent("ecuTask", 2*CLOCK_TICKS_PER_MS, 0, 0, 0);
@@ -153,63 +137,21 @@ void ecuInit() {
 
 // Create demo A2L file 
 void ecuCreateA2lDescription() {
-
-    // Calibration Memory Segment
-#ifdef OPTION_ENABLE_CAL_SEGMENT  
-    A2lCreate_MOD_PAR(ApplXcpGetAddr((uint8_t*)&ecuPar), sizeof(ecuPar), (char*)ecuPar.epk);
-#endif
-
-    // Parameters
-    A2lCreateParameterWithLimits(ecuPar.ampl, A2L_TYPE_DOUBLE, "Amplitude", "V", 0, 800);
-    A2lCreateParameterWithLimits(ecuPar.offset, A2L_TYPE_DOUBLE, "RefOffset", "V", -200, +200);
-    A2lCreateParameterWithLimits(ecuPar.phase, A2L_TYPE_DOUBLE, "Phase", "", 0, M_2PI);
-    A2lCreateParameterWithLimits(ecuPar.period, A2L_TYPE_DOUBLE, "Period in s", "s", 0, 10);
-    A2lCreateParameterWithLimits(ecuPar.cycleTimeUs, A2L_TYPE_UINT32, "ECU task cycle time in us", "us", 50, 1000000);
-    A2lCreateMap(ecuPar.map1_8_8, A2L_TYPE_UINT8, 8, 8, "8*8 byte calibration array", "");
-    A2lCreateCurve(ecuPar.curve1_32, A2L_TYPE_UINT8, 32, "32 byte calibration array", "");
-
-    // Create a group for the parameters (optional)
-    A2lParameterGroup("Parameters", 7,        
-        "ecuPar.cycleTimeUs", 
-        "ecuPar.map1_8_8", "ecuPar.curve1_32",
-        "ecuPar.period", "ecuPar.ampl", "ecuPar.phase", "ecuPar.offset" );
-
     // Measurements
     A2lSetEvent(gXcpEvent_EcuCyclic); // Associate XCP event "EcuCyclic" to the variables created below
-    A2lCreateMeasurement(byteCounter, A2L_TYPE_UINT8, "");
-    A2lCreateMeasurement(wordCounter, A2L_TYPE_UINT16, "");
-    A2lCreateMeasurement(dwordCounter, A2L_TYPE_UINT32, "");
-    A2lCreateMeasurement(sbyteCounter, A2L_TYPE_INT8, "");
-    A2lCreateMeasurement(swordCounter, A2L_TYPE_INT16, "");
-    A2lCreateMeasurement(sdwordCounter, A2L_TYPE_INT32, "");
     A2lCreatePhysMeasurement(channel1, A2L_TYPE_DOUBLE, "Sinus signal 1", 1.0, 0.0, "");
     A2lCreatePhysMeasurement(channel2, A2L_TYPE_DOUBLE, "Sinus signal 2", 1.0, 0.0, "");
     A2lCreatePhysMeasurement(channel3, A2L_TYPE_DOUBLE, "Sinus signal 3", 1.0, 0.0, "");
-    A2lCreateMeasurementArray(byteArray1, A2L_TYPE_UINT8);
-    A2lCreateMeasurementArray(longArray1, A2L_TYPE_UINT32);
 
     // Create a group for the measurments (optional)
-    A2lMeasurementGroup("EcuTaskSignals", 11,
-        "channel1", "channel2", "channel3", "byteCounter", "wordCounter", "dwordCounter", "sbyteCounter", "swordCounter", "sdwordCounter" ,"longArray1","byteArray1");
+    A2lMeasurementGroup("EcuTaskSignals", 3,
+        "channel1", "channel2", "channel3");
 }
 
 
 // Cyclic demo task 
 void ecuCyclic( void )
 {
-    // Counters of different type
-    sbyteCounter++;
-    swordCounter++;
-    sdwordCounter++;
-    byteCounter++;
-    wordCounter++;
-    dwordCounter++;
-
-    // Arrays
-    unsigned int i = dwordCounter % 1024;
-    longArray1[i] ++;
-    byteArray1[i] ++;
-
     // Floating point signals
     double x = M_2PI * ecuTime / ecuCalPage->period;
     channel1 = ecuCalPage->offset + ecuCalPage->ampl * sin(x);
