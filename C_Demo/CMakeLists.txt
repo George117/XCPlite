@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1.0)
 
 project(C_Demo VERSION 5.0 LANGUAGES C)
-set(WINDOWS TRUE)
+set(WINDOWS FALSE)
 
 set(CMAKE_C_COMPILER "gcc")
 set(CMAKE_CXX_COMPILER "g++")
@@ -21,7 +21,7 @@ set_source_files_properties(${C_Demo_LINUX_SOURCES} PROPERTIES LANGUAGE C)
 
 set(OPTION_DEBUG_LEVEL 2 CACHE STRING "Debug output level")
 option(OPTION_ENABLE_TCP "Enable TCP" 1)
-option(OPTION_USE_TCP "Use TCP by default" 0)
+option(OPTION_USE_TCP "Use TCP by default" 1)
 set(OPTION_SERVER_PORT 5555 CACHE STRING "XCP default port")
 set(OPTION_SERVER_ADDR {0,0,0,0} CACHE STRING "XCP IP address to bind, ANY=0.0.0.0")
 option(OPTION_ENABLE_A2L_GEN "Enable A2L file generator" 1)
