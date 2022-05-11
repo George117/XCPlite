@@ -30,9 +30,9 @@ static unsigned int gA2lConversions;
 
 static const char* gA2lHeader =
 "ASAP2_VERSION 1 71\n"
-"/begin PROJECT %s \"\"\n"
+"/begin PROJECT CPP \"\"\n"
 "/begin HEADER \"\" VERSION \"1.0\" /end HEADER\n"
-"/begin MODULE %s \"\"\n\n"
+"/begin MODULE CPP \"\"\n\n"
 
 //----------------------------------------------------------------------------------
 "/begin MOD_COMMON \"\"\n"
