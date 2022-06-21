@@ -137,7 +137,7 @@ void ecuInit() {
     channel1 = channel2 = channel3 = 0;
 
     // Create an XCP event for the cyclic task
-    gXcpEvent_EcuCyclic = XcpCreateEvent("ecuTask", CLOCK_TICKS_PER_MS, 0, 0, 0);
+    gXcpEvent_EcuCyclic = XcpCreateEvent("ecuTask", 10*CLOCK_TICKS_PER_MS, 0, 0, 0);
 }
 
 
@@ -178,10 +178,7 @@ void* ecuTask(void* p)
     printf("Start C task (cycle = %dus, XCP event = %d)\n", ecuCalPage->cycleTimeUs, gXcpEvent_EcuCyclic);
     for (;;) {
     //    ftime(&start);
-
-        for (unsigned char index = 0; index < 10; index++) {
-            sleepNs(1000000); // 10ms
-        }
+		sleepNs(ecuCalPage->cycleTimeUs * 1000); // cycletime is a calibration parameter
         ecuCyclic();
 
     //    ftime(&end);
