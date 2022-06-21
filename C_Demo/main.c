@@ -29,7 +29,18 @@
 #if OPTION_ENABLE_A2L_GEN
 static BOOL createA2L() {
 
-    if (!A2lOpen(OPTION_A2L_FILE_NAME, OPTION_A2L_PROJECT_NAME )) return FALSE;
+    // Create A2L name depending on the port
+    char *port_number = calloc(16, sizeof(char *));
+    char *a2l_name = calloc(256, sizeof(char*));
+
+    snprintf(port_number, 10, "%d", gOptionPort);
+
+    strcat(a2l_name, port_number);
+    strcat(a2l_name, "_");
+    strcat(a2l_name, APP_NAME);
+    strcat(a2l_name, ".a2l");
+
+    if (!A2lOpen(a2l_name, OPTION_A2L_PROJECT_NAME )) return FALSE;
     ecuCreateA2lDescription();
     A2lCreateParameterWithLimits(gDebugLevel, A2L_TYPE_UINT32, "Console output verbosity", "", 0, 100);
     A2lCreate_IF_DATA(gOptionUseTCP, gOptionAddr, gOptionPort);
