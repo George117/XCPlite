@@ -97,6 +97,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)\C_Demo\;$(SolutionDir)\src\;$(SolutionDir)\xlapi\</AdditionalIncludeDirectories>
       <CompileAs>CompileAsC</CompileAs>
+      <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -164,6 +165,7 @@
     <ClCompile Include="..\src\xcpTl.c" />
     <ClCompile Include="..\xlapi\xl_pcap.c" />
     <ClCompile Include="..\xlapi\xl_udp.c" />
+    <ClCompile Include="asap.c" />
     <ClCompile Include="ecu.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
@@ -178,6 +180,7 @@
     <ClInclude Include="..\src\xcpTl.h" />
     <ClInclude Include="..\xlapi\xl_pcap.h" />
     <ClInclude Include="..\xlapi\xl_udp.h" />
+    <ClInclude Include="asap.h" />
     <ClInclude Include="ecu.h" />
     <ClInclude Include="main.h" />
     <ClInclude Include="main_cfg.h" />

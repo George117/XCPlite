@@ -30,6 +30,7 @@
     <ClCompile Include="..\src\xcpAppl.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="asap.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ecu.h" />
@@ -67,6 +68,7 @@
     <ClInclude Include="..\src\xcpAppl.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="asap.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">

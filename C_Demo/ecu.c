@@ -19,6 +19,8 @@
 
 #include <sys\timeb.h> 
 
+//#include "asap.h"
+extern void updateVars();
 
 struct timeb start, end;
 int diff;
@@ -141,28 +143,10 @@ void ecuInit() {
 }
 
 
-// Create demo A2L file 
-void ecuCreateA2lDescription() {
-    // Measurements
-    A2lSetEvent(gXcpEvent_EcuCyclic); // Associate XCP event "EcuCyclic" to the variables created below
-    A2lCreatePhysMeasurement(channel1, A2L_TYPE_DOUBLE, "Sinus signal 1", 1.0, 0.0, "");
-    A2lCreatePhysMeasurement(channel2, A2L_TYPE_DOUBLE, "Sinus signal 2", 1.0, 0.0, "");
-    A2lCreatePhysMeasurement(channel3, A2L_TYPE_DOUBLE, "Sinus signal 3", 1.0, 0.0, "");
-
-    // Create a group for the measurments (optional)
-    A2lMeasurementGroup("EcuTaskSignals", 3,
-        "channel1", "channel2", "channel3");
-}
-
-
 // Cyclic demo task 
 void ecuCyclic( void )
 {
-    // Floating point signals
-    channel1++;
-    channel2++;
-    channel3++;
-
+    updateVars();
     XcpEvent(gXcpEvent_EcuCyclic); // Trigger XCP measurement data aquisition event 
 }
 
