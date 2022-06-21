@@ -136,8 +136,8 @@ extern BOOL socketGetLocalAddr(uint8_t* mac, uint8_t* addr);
 // Clock
 
 // Clock resolution
-//#define CLOCK_USE_UTC_TIME_NS // Use ns timestamps relative to 1.1.1970 (TAI monotonic - no backward jumps)
-#define CLOCK_USE_APP_TIME_US // Use arbitrary us timestamps relative to application start
+#define CLOCK_USE_UTC_TIME_NS // Use ns timestamps relative to 1.1.1970 (TAI monotonic - no backward jumps)
+//#define CLOCK_USE_APP_TIME_US // Use arbitrary us timestamps relative to application start
 
 
 #ifdef CLOCK_USE_UTC_TIME_NS

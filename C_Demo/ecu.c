@@ -17,6 +17,12 @@
 #include "A2L.h"
 #include "ecu.h"
 
+#include <sys\timeb.h> 
+
+
+struct timeb start, end;
+int diff;
+int i = 0;
 
 /**************************************************************************/
 /* ECU Measurements */
@@ -51,7 +57,7 @@ struct ecuPar {
 
 struct ecuPar ecuPar = {
     __DATE__ " " __TIME__, // EPK
-    1000, // Default cycle time in us
+    10000, // Default cycle time in us
     3.0, // period
     0.0, // offset
     0, // phase
@@ -153,17 +159,15 @@ void ecuCreateA2lDescription() {
 void ecuCyclic( void )
 {
     // Floating point signals
-    double x = M_2PI * ecuTime / ecuCalPage->period;
-    channel1 = ecuCalPage->offset + ecuCalPage->ampl * sin(x);
-    channel2 = ecuCalPage->offset + ecuCalPage->ampl * sin(x + M_PI * 1 / 3);
-    channel3 = ecuCalPage->offset + ecuCalPage->ampl * sin(x + M_PI * 2 / 3);
-    ecuTime += 0.001;
+    channel1++;
+    channel2++;
+    channel3++;
 
     XcpEvent(gXcpEvent_EcuCyclic); // Trigger XCP measurement data aquisition event 
 }
 
 
-// ECU cyclic (1ms default) demo task
+// ECU cyclic (10ms default)
 #ifdef _WIN
 DWORD WINAPI ecuTask(LPVOID p)
 #else
@@ -173,7 +177,17 @@ void* ecuTask(void* p)
     (void)p;
     printf("Start C task (cycle = %dus, XCP event = %d)\n", ecuCalPage->cycleTimeUs, gXcpEvent_EcuCyclic);
     for (;;) {
-        sleepNs(ecuCalPage->cycleTimeUs * 1000); // cycletime is a calibration parameter
+    //    ftime(&start);
+
+        for (unsigned char index = 0; index < 10; index++) {
+            sleepNs(1000000); // 10ms
+        }
         ecuCyclic();
+
+    //    ftime(&end);
+    //    diff = (int)(1000.0 * (end.time - start.time)
+    //         + (end.millitm - start.millitm));
+
+    //    printf("\nOperation took %u milliseconds\n", diff);
     }
 }
